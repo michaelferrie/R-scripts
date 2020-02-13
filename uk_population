@@ -1,0 +1,12 @@
+#Michaels UK Population Plot
+
+ukpop <- read.csv(file.path("uk_population.csv"))
+
+plot(ukpop, main="UK Population",
+     xlab="Year",
+     ylab="Population in Millions",
+     col.main="red", 
+     col.lab="blue", 
+     col.sub="black")
+     
+cor.test(ukpop$Year, ukpop$Population, method = "pearson")
