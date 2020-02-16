@@ -1,0 +1,29 @@
+# Create R WordCloud - first install then load libraries
+install.packages("tm")  # for text mining
+install.packages("wordcloud2") # word-cloud generator
+install.packages("RColorBrewer") # color palettes
+library("tm")
+library("wordcloud2")
+library("RColorBrewer")
+# Pass text to a corpus, then perform cleaning
+text <- readLines("/home/michael/code/bojo_speech.txt")
+docs <- Corpus(VectorSource(text))
+docs <- tm_map(docs, content_transformer(tolower))
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, stripWhitespace)
+docs <- tm_map(docs, removeWords, stopwords("english"))
+docs <- tm_map(docs, removeWords, c( "will", "the", "this", "said", "like", "now", "went", "come")) 
+# Create matrix
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+# Check top ten
+#head(d, 10)
+#Fancy wordcloud v2 - two examples
+wordcloud2(d, size = 2, minRotation = -pi/2, maxRotation = -pi/2)
+
+barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word,
+        col ="lightblue", main ="Most frequent words",
+        ylab = "Word frequencies")
